@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
-import com.tcg.userprovider.configuration.EmailConfiguration;
 import com.tcg.userprovider.entity.ReturnData;
 import com.tcg.userprovider.service.MailService;
 import com.tcg.userprovider.service.UserService;
@@ -24,14 +23,11 @@ public class MainController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    EmailConfiguration emailConfiguration;
-
     @ResponseBody
     @GetMapping("/test")
     public String mail() {
-        mailService.sendSimpleMail("1486126243@qq.com", "验证码", "123456");
-        return emailConfiguration.getMails().toString();
+        mailService.sendCode("1486126243@qq.com");
+        return "";
     }
 
     @ResponseBody
