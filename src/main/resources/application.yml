@@ -48,6 +48,7 @@ spring:
 
 #mymailsources
 multi-mail-sources:
+  expire: 300
   mails:
     mail-0:
       default-encoding: UTF-8

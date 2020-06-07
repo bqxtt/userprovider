@@ -24,10 +24,10 @@ public class MainController {
     UserService userService;
 
     @ResponseBody
-    @GetMapping("/test")
-    public String mail() {
-        mailService.sendCode("1486126243@qq.com");
-        return "";
+    @GetMapping("/mail")
+    public String mail(@RequestParam("email") String email) {
+        ReturnData returnData = mailService.sendCode(email);
+        return JSON.toJSONString(returnData);
     }
 
     @ResponseBody
@@ -41,7 +41,7 @@ public class MainController {
     @PostMapping("/register")
     public String register(@RequestParam("username") String username, @RequestParam("password") String password,
         @RequestParam("email") String email) {
-        ReturnData returnData = userService.register(username, password, email);
+        ReturnData returnData = userService.register(username, password, email, "1234");
         return JSON.toJSONString(returnData);
     }
 }

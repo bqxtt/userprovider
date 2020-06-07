@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Component;
 
 import com.tcg.userprovider.entity.User;
 
@@ -12,6 +13,7 @@ import com.tcg.userprovider.entity.User;
  * @date 2020/5/23
  */
 @Mapper
+@Component
 public interface UserMapper {
     /**
      * 新建用户
@@ -21,7 +23,7 @@ public interface UserMapper {
      * @return 数据库操作结果
      */
     @Insert("insert into userInfo(username,password,email) values(#{username},#{password},#{email})")
-    public int addUser(User user);
+    int addUser(User user);
 
     /**
      * 通过用户名查找用户
@@ -31,5 +33,5 @@ public interface UserMapper {
      * @return 用户实体类
      */
     @Select("select * from userInfo where username = #{username}")
-    public User findUserByUsername(@Param("username") String username);
+    User findUserByUsername(@Param("username") String username);
 }

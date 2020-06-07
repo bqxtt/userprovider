@@ -28,7 +28,9 @@ public interface UserService {
      *            密码
      * @param mail
      *            邮箱
+     * @param verifyCode
+     *            验证码
      * @return 结果信息
      */
-    ReturnData register(String username, String password, String mail);
+    ReturnData register(String username, String password, String mail, String verifyCode);
 }

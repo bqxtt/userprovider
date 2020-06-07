@@ -9,6 +9,13 @@ public class ReturnData implements java.io.Serializable {
     public String message;
     public byte[] data;
 
+    public ReturnData(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public ReturnData() {}
+
     public void setCode(int code) {
         this.code = code;
     }

@@ -8,6 +8,7 @@ import com.tcg.userprovider.entity.ReturnData;
 import com.tcg.userprovider.entity.User;
 import com.tcg.userprovider.mapper.UserMapper;
 import com.tcg.userprovider.service.UserService;
+import com.tcg.userprovider.utils.RedisUtil;
 
 /**
  * @author 14861
@@ -18,7 +19,10 @@ import com.tcg.userprovider.service.UserService;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public ReturnData login(String username, String password) {
@@ -36,24 +40,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ReturnData register(String username, String password, String email) {
+    public ReturnData register(String username, String password, String email, String verifyCode) {
         User user = userMapper.findUserByUsername(username);
         ReturnData returnData = new ReturnData();
         if (user != null) {
             returnData.setCode(2);
             returnData.setMessage("user already exist");
         } else {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setPassword(password);
-            newUser.setUsername(username);
-            int result = userMapper.addUser(newUser);
-            if (result == 1) {
-                returnData.setCode(0);
-                returnData.setMessage("register success");
-            } else {
+            if (!redisUtil.hasKey(email) || !verifyCode.equals(redisUtil.get(email))) {
                 returnData.setCode(1);
-                returnData.setMessage("register failed");
+                returnData.setMessage("verifyCode Error");
+            } else {
+                redisUtil.del(email);
+                User newUser = new User();
+                newUser.setEmail(email);
+                newUser.setPassword(password);
+                newUser.setUsername(username);
+                int result = userMapper.addUser(newUser);
+                if (result == 1) {
+                    returnData.setCode(0);
+                    returnData.setMessage("register success");
+                } else {
+                    returnData.setCode(1);
+                    returnData.setMessage("register failed");
+                }
             }
         }
 
