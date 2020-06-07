@@ -68,3 +68,7 @@ multi-mail-sources:
       protocol: smtp
       username: magic_camera1@163.com
       password: ZCZAGCCONNQBLLCJ
+#JWT
+jwt:
+  expire: 864000
+  secret: sdkjflkajflkdjf

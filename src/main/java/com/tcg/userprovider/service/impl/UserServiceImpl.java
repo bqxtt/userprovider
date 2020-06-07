@@ -1,5 +1,9 @@
 package com.tcg.userprovider.service.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +12,7 @@ import com.tcg.userprovider.entity.ReturnData;
 import com.tcg.userprovider.entity.User;
 import com.tcg.userprovider.mapper.UserMapper;
 import com.tcg.userprovider.service.UserService;
+import com.tcg.userprovider.utils.JwtUtil;
 import com.tcg.userprovider.utils.RedisUtil;
 
 /**
@@ -24,13 +29,21 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Override
     public ReturnData login(String username, String password) {
         ReturnData returnData = new ReturnData();
         User user = userMapper.findUserByUsername(username);
-        if (user != null && user.getUsername().equals(username) && user.getPassword().equals(password)) {
+        if (user != null && username.equals(user.getUsername()) && password.equals(user.getPassword())) {
             returnData.setCode(0);
             returnData.setMessage("login success");
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("username", username);
+            claims.put("password", password);
+            byte[] data = jwtUtil.createToken(claims).getBytes(StandardCharsets.UTF_8);
+            returnData.setData(data);
         } else {
             returnData.setCode(1);
             returnData.setMessage("login failed");
