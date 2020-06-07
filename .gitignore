@@ -1,6 +1,7 @@
 HELP.md
 target/
 .mvn
+src/main/resources
 !**/src/main/**
 !**/src/test/**
 
